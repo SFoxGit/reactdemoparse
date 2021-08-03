@@ -11,7 +11,7 @@ function Header() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto">
             <Nav.Link href="#results">Results</Nav.Link>
-            <Nav.Link href="#info">Info</Nav.Link>
+            <Nav.Link href="#add">Add</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
