@@ -1,12 +1,21 @@
 import './App.css';
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import Header from './Header/header';
+import Homepage from './Homepage/homepage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Test</p>
-      </header>
-    </div>
+    <Router basename={process.env.PUBLIC_URL}>
+      <Header />
+      <Switch>
+        <Route exact path="/">
+          <Homepage />
+        </Route>
+        <Route exact path="/results">
+          
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
