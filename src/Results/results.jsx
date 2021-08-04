@@ -19,7 +19,7 @@ export default function Results(props) {
 
       {matches.length ? <Row>{matches.map(x => <Button onClick={() => setMatch(x)}>Match: {x}</Button>)}</Row> : null}
       {summaryStats.length ? summaryStats.map(data => {
-        if (data.match === match) {
+        if (data.match === match || data.match === "match") {
           return (<Row>
             <Col>{data.player}</Col>
             <Col>{data.team}</Col>

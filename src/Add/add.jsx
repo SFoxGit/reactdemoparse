@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { Container, Form, InputGroup, Button } from 'react-bootstrap'
+import React from 'react'
+import { Container } from 'react-bootstrap'
 import { readString } from 'react-papaparse';
 import { useHistory } from "react-router";
 
@@ -11,7 +11,7 @@ export default function Add(props) {
   const setMatches = props.setMatches;
 
   const formatData = (data) => {
-    const summaryStatsArr = [{ player: "player", team: "team", powerset: "powerset", deaths: "deaths", targets: "targets", survival: "survival", otp: "otp", heal: "heal", atks: "atks" }]
+    const summaryStatsArr = [{ match: "match", player: "player", team: "team", powerset: "powerset", deaths: "deaths", targets: "targets", survival: "survival", otp: "otp", heal: "heal", atks: "atks" }]
     const summaryArr = []
     const matchesArr = []
     data.forEach(row => {
@@ -31,7 +31,6 @@ export default function Add(props) {
       }
       if (row[2] === "summary") {
         if (!(matchesArr.includes(row[0]))) {
-          console.log(matchesArr)
           matchesArr.push(row[0])
         }
         summaryArr.push({
