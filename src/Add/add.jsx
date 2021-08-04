@@ -8,13 +8,16 @@ export default function Add(props) {
   const setMatchData = props.setMatchData;
   const setSummaryStats = props.setSummaryStats;
   const setSummary = props.setSummary;
+  const setMatches = props.setMatches;
 
   const formatData = (data) => {
     const summaryStatsArr = [{ player: "player", team: "team", powerset: "powerset", deaths: "deaths", targets: "targets", survival: "survival", otp: "otp", heal: "heal", atks: "atks" }]
     const summaryArr = []
+    const matchesArr = []
     data.forEach(row => {
       if (row[2] === "summary_stats") {
         summaryStatsArr.push({
+          match: row[0],
           player: row[3],
           team: row[4],
           powerset: row[8],
@@ -27,13 +30,19 @@ export default function Add(props) {
         })
       }
       if (row[2] === "summary") {
+        if (!(matchesArr.includes(row[0]))) {
+          console.log(matchesArr)
+          matchesArr.push(row[0])
+        }
         summaryArr.push({
+          match: row[0],
           title: row[8],
           blue: row[14],
           red: row[15]
         })
       }
     })
+    setMatches(matchesArr)
     setSummaryStats(summaryStatsArr)
     setSummary(summaryArr)
     history.push('/results')
