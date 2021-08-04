@@ -8,6 +8,9 @@ import { useState } from 'react';
 
 function App() {
   const [matchData, setMatchData] = useState();
+  const [summaryStats, setSummaryStats] = useState([]);
+  const [summary, setSummary] = useState();
+
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Header />
@@ -16,10 +19,14 @@ function App() {
           <Homepage />
         </Route>
         <Route exact path="/results">
-          <Results matchData={matchData} />
+          <Results matchData={matchData} setSummaryStats={setSummaryStats} summaryStats={summaryStats} />
         </Route>
         <Route exact path="/add">
-          <Add setMatchData={setMatchData}/>
+          <Add 
+          setMatchData={setMatchData} 
+          setSummaryStats={setSummaryStats}
+          setSummary={setSummary}
+          />
         </Route>
       </Switch>
     </Router>
