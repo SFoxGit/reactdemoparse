@@ -109,6 +109,24 @@ export default function Add(props) {
         })
       }
     })
+    summaryStatsArr.sort((a, b) => {
+      if (a.otp < b.otp) {
+        return 1
+      }
+      if (a.otp > b.otp) {
+        return -1
+      }
+      return null
+    })
+    summaryStatsArr.sort((a, b) => {
+      if (a.team < b.team) {
+        return -1
+      }
+      if (a.team > b.team) {
+        return 1
+      }
+      return null
+    })
     setMatches(matchesArr)
     setSummaryStats(summaryStatsArr)
     setSummary(summaryArr)

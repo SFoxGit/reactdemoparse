@@ -21,7 +21,7 @@ export default function Results(props) {
   return (
     <Container fluid>
 
-      {matches.length ? <Row>{matches.map(x => <Button onClick={() => setMatch(x)}>Match: {x}</Button>)}</Row> : null}
+      {matches.length ? <Row className="justify-content-between m-2">{matches.map(x => <Button variant="dark" onClick={() => setMatch(x)}>Match: {x}</Button>)}</Row> : null}
       <SummaryStats 
       summaryStats={summaryStats} 
       match={match} 

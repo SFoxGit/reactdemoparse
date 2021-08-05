@@ -9,7 +9,7 @@ import { useState } from 'react';
 function App() {
   const [matchData, setMatchData] = useState();
   const [summaryStats, setSummaryStats] = useState([]);
-  const [summary, setSummary] = useState();
+  const [summary, setSummary] = useState([]);
   const [match, setMatch] = useState(1);
   const [matches, setMatches] = useState([]);
   const [spikeLog, setSpikeLog] = useState([])

@@ -52,7 +52,7 @@ export default function SummaryStats(props) {
             :
             null}
         </tbody>
-      </Table>)
+      </Table>
     </>
   )
 }
