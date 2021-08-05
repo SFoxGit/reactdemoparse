@@ -9,11 +9,14 @@ export default function Add(props) {
   const setSummaryStats = props.setSummaryStats;
   const setSummary = props.setSummary;
   const setMatches = props.setMatches;
+  const setSpikeLog = props.setSpikeLog;
 
   const formatData = (data) => {
     const summaryStatsArr = [{ match: "match", player: "player", team: "team", powerset: "powerset", deaths: "deaths", targets: "targets", survival: "survival", otp: "otp", heal: "heal", atks: "atks" }]
     const summaryArr = []
     const matchesArr = []
+    const spikeLogArr = []
+
     data.forEach(row => {
       if (row[2] === "summary_stats") {
         summaryStatsArr.push({
@@ -40,10 +43,39 @@ export default function Add(props) {
           red: row[15]
         })
       }
+      if (row[2] === "spike_log") {
+        if (spikeLogArr.some(e => e.id === row[13] && e.match === row[0])) {
+          const objectIndex = spikeLogArr.findIndex((obj => obj.id === row[13] && obj.match === row[0]))
+          spikeLogArr[objectIndex].actions.push({
+            time: row[5],
+            player: row[9],
+            action: row[8],
+            playerTeam: row[10],
+            distance: row[14],
+            hitTime: row[15]
+          })
+        } else {
+          spikeLogArr.push({
+            match: row[0],
+            id: row[13],
+            target: row[3],
+            team: row[4],
+            actions: [{
+              time: row[5],
+              player: row[9],
+              action: row[8],
+              playerTeam: row[10],
+              distance: row[14],
+              hitTime: row[15]
+            }]
+          })
+        }
+      }
     })
     setMatches(matchesArr)
     setSummaryStats(summaryStatsArr)
     setSummary(summaryArr)
+    setSpikeLog(spikeLogArr)
     history.push('/results')
   }
 

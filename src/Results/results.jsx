@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
+import Summary from '../Summary/summary'
 import SummaryStats from '../SummaryStats/summary.stats'
 // import csvToJson from 'convert-csv-to-json'
 
@@ -10,16 +11,25 @@ export default function Results(props) {
   const match = props.match
   const setMatch = props.setMatch
   const matches = props.matches
+  const summary = props.summary
+  const spikeLog = props.spikeLog
 
   useEffect(() => {
-    console.log(matches)
-  }, [matches])
+    console.log(spikeLog)
+  }, [spikeLog])
 
   return (
     <Container fluid>
 
       {matches.length ? <Row>{matches.map(x => <Button onClick={() => setMatch(x)}>Match: {x}</Button>)}</Row> : null}
-      <SummaryStats summaryStats={summaryStats} match={match} />
+      <SummaryStats 
+      summaryStats={summaryStats} 
+      match={match} 
+      />
+      <Summary 
+      summary={summary} 
+      match={match}
+      />
     </Container>
   )
 }

@@ -12,6 +12,7 @@ function App() {
   const [summary, setSummary] = useState();
   const [match, setMatch] = useState(1);
   const [matches, setMatches] = useState([]);
+  const [spikeLog, setSpikeLog] = useState([])
 
   return (
     <Router basename={process.env.PUBLIC_URL}>
@@ -28,6 +29,8 @@ function App() {
           match={match}
           setMatch={setMatch}
           matches={matches}
+          summary={summary}
+          spikeLog={spikeLog}
           />
         </Route>
         <Route exact path="/add">
@@ -36,6 +39,7 @@ function App() {
           setSummaryStats={setSummaryStats}
           setSummary={setSummary}
           setMatches={setMatches}
+          setSpikeLog={setSpikeLog}
           />
         </Route>
       </Switch>
