@@ -11,13 +11,13 @@ export default function Add(props) {
   const setMatches = props.setMatches;
   const setSpikeLog = props.setSpikeLog;
 
-  const formatData = (data) => {
-    const summaryStatsArr = [{ match: "match", player: "player", team: "team", powerset: "powerset", deaths: "deaths", targets: "targets", survival: "survival", otp: "otp", heal: "heal", atks: "atks" }]
+  const formatData = async (data) => {
+    const summaryStatsArr = []
     const summaryArr = []
     const matchesArr = []
     const spikeLogArr = []
 
-    data.forEach(row => {
+    await data.forEach(row => {
       if (row[2] === "summary_stats") {
         summaryStatsArr.push({
           match: row[0],
@@ -29,7 +29,11 @@ export default function Add(props) {
           survival: (row[16] * 100).toFixed(2) + '%',
           otp: (row[17] * 100).toFixed(2) + '%',
           heal: (row[18] * 100).toFixed(2) + '%',
-          atks: row[19]
+          atks: row[19],
+          atksOnDeath: 0,
+          atksBeforePS: 0,
+          atksAfterDeath: 0,
+          atksIntoPS: 0
         })
       }
       if (row[2] === "summary") {
@@ -70,6 +74,39 @@ export default function Add(props) {
             }]
           })
         }
+      }
+    })
+    await spikeLogArr.forEach(x => {
+      if (x.actions.some(e => e.action === "death")) {
+        const deathIndex = x.actions.findIndex((obj => obj.action === "death"))
+        x.actions.forEach(e => {
+          if (e.hitTime < (x.actions[deathIndex].hitTime + 0.12) && e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksOnDeath = (summaryStatsArr[playerIndex].atksOnDeath+1);
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS+1);
+          } else if (e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksAfterDeath = (summaryStatsArr[playerIndex].atksAfterDeath+1);
+          }
+        })
+      } else if (x.actions.some(e => e.action === "phase shift" || e.action === "hibernate")) {
+        const phaseIndex = x.actions.findIndex((obj => obj.action === "phase shift" || obj.action === "hibernate"))
+        x.actions.forEach(e => {
+          if (e.time < (x.actions[phaseIndex].hitTime + 0.12) && e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS+1);
+          } else if (e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksIntoPS = (summaryStatsArr[playerIndex].atksIntoPS+1);
+          }
+        })
+      } else {
+        x.actions.forEach(e => {
+          if (e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS+1);
+          }
+        })
       }
     })
     setMatches(matchesArr)

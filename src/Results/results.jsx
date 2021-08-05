@@ -14,9 +14,9 @@ export default function Results(props) {
   const summary = props.summary
   const spikeLog = props.spikeLog
 
-  useEffect(() => {
-    console.log(spikeLog)
-  }, [spikeLog])
+  // useEffect(() => {
+  //   console.log(spikeLog)
+  // }, [spikeLog])
 
   return (
     <Container fluid>
