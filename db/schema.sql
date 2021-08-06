@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS cohdemos;
+
+CREATE DATABASE cohdemos;
