@@ -1,10 +1,11 @@
 import './App.css';
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from './Header/header';
 import Homepage from './Homepage/homepage';
 import Results from './Results/results';
 import Add from './Add/add'
 import { useState } from 'react';
+import Login from './Login/login';
 
 function App() {
   const [matchData, setMatchData] = useState();
@@ -13,13 +14,18 @@ function App() {
   const [match, setMatch] = useState(1);
   const [matches, setMatches] = useState([]);
   const [spikeLog, setSpikeLog] = useState([])
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [userId, setUserId] = useState()
 
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router>
       <Header />
       <Switch>
         <Route exact path="/">
           <Homepage />
+        </Route>
+        <Route exact path="/login">
+          <Login setLoggedIn={setLoggedIn} setUserId={setUserId}/>
         </Route>
         <Route exact path="/results">
           <Results 
