@@ -2,13 +2,12 @@ const router = require('express').Router();
 const { spawn } = require('child_process');
 const pythonDir = ("C:/Users/16073/Desktop/Code/reactdemoparse/parsedemo.py")
 const fs = require('fs')
-var parse = require('csv-parse')
 
 router.post("/", async (req, res) => {
   console.log(pythonDir)
   try {
     const testData = req.body
-    console.log("File: "+ testData)
+    console.log("File: " + testData)
     const newpath = "C:/Users/16073/Desktop/Code/reactdemoparse/"
     const file = req.files.file
     const filename = file.name
@@ -26,16 +25,17 @@ router.post("/", async (req, res) => {
     python.on('close', (code) => {
       console.log(`child process close all stdio with code ${code}`);
       // send data to browser
-      fs.readFile(`${newpath}${filename}.csv`, function (err, fileData) {
-        // const dataArray = data.split(/\r?\n/);
-        parse(fileData, {columns: true, trim: true}, function (err, rows) {
-          console.log(rows)
-          res.status(200).json(rows)
+      const csvArray = fs.readFileSync(`${newpath}${filename}.csv`)
+        .toString() // convert Buffer to string
+        .split('\n') // split string to lines
+        .map(e => e.trim()) // remove white spaces for each line
+        .map(e => e.split(',').map(e => e.trim())); // split each line to array
+      const test = JSON.parse(JSON.stringify(csvArray))
+      console.log(csvArray)
+      res.status(200).json(csvArray)
 
-        })
-        
-      })
-    });
+    })
+
   } catch (err) {
     res.status(500).json(err);
   }
