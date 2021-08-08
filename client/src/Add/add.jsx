@@ -150,32 +150,35 @@ export default function Add(props) {
           accept=".cohdemo"
           onChange={(e) => {
             const files = e.target.files;
+            const formData = new FormData();
             console.log(files);
             if (files) {
+              formData.append("file", files[0])
               console.log(files[0]);
-              readString(files[0], {
-                complete: function (results) {
-                  axios.post('/api/parse', { file: results })
-                    .then(res => {
-                      // setMatchData(res.data)
-                      // formatData(res.data)
-                      console.log(res.data)
-                    })
-                    .catch(err => console.log(err))
-                  // setMatchData(results.data);
-                  // formatData(results.data);
+              // readString(files[0], {
+              //   complete: function (results) {
+              axios.post('/api/parse', formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
                 }
-
-                // readString(files[0], {
-                //   complete: function (results) {
-                //     setMatchData(results.data);
-                //     formatData(results.data);
-                //   }
-                // }
-                // )
               })
+                .then(res => {
+                  console.log(res.data);
+                  formatData(res.data)
+                })
+                .catch(err => console.log(err))
+              // }
+              // })
             }
           }}
+
+        // readString(files[0], {
+        //   complete: function (results) {
+        //     setMatchData(results.data);
+        //     formatData(results.data);
+        //   }
+        // }
+        // )
         />
       </div>
 

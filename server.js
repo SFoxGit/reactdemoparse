@@ -6,10 +6,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var compression = require('compression')
 // var logger = require('morgan');
-
+const fileupload = require('express-fileupload')
 const routes = require("./controller");
 const sequelize = require("./config/connection");
-
+var parse = require('csv-parse')
 
 var app = express();
 
@@ -25,7 +25,7 @@ const sess = {
 };
 
 app.use(session(sess));
-
+app.use(fileupload());
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');

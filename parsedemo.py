@@ -19,7 +19,6 @@ def main(arg1,quiet):
 	t = 0           # demo time in seconds
 
 	player_ids   = []
-	test_array   = []
 	player_list  = []
 	players      = ''
 
@@ -44,9 +43,9 @@ def main(arg1,quiet):
 	with open(arg1,'r') as fp:
 
 		# blank out csv if existing
-		# with open(arg1+'.csv','w',newline='') as csvfile:
-		# 	csvw = csv.writer(csvfile, delimiter=',')
-		# 	test_array.append(header)
+		with open(arg1+'.csv','w',newline='') as csvfile:
+			csvw = csv.writer(csvfile, delimiter=',')
+			csvw.writerow(header)
 
 		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 		count = 0
@@ -282,7 +281,7 @@ def main(arg1,quiet):
 
 					# if (p.death == 1 or p.action  != '' or p.target != '' or p.targetinstance == 1) and not p.csvhold:
 					if p.writelog and not p.csvhold:
-						test_array.append(csv_log)
+						csvw.writerow(csv_log)
 
 						# keep track of extra
 						if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras and t > extras_start:
@@ -311,7 +310,7 @@ def main(arg1,quiet):
 				# more stupid entangle stuff
 				for p in players.values():
 					if p.csvhold and t > p.csvhold[0]:
-						test_array.append(p.csvhold[1])
+						csvw.writerow(p.csvhold[1])
 						p.csvhold = False
 						p.reset()
 
@@ -326,14 +325,14 @@ def main(arg1,quiet):
 					# aggregate greens availability
 					score_temp = [0,0] # calc running score at bundle step
 					for p in players.values():
-						test_array.append([demoname,match_map,'greens_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,p.greens])
-						test_array.append([demoname,match_map,'hp_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,-p.totaldmgtaken])
+						csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,p.greens])
+						csvw.writerow([demoname,match_map,'hp_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,-p.totaldmgtaken])
 						if p.team == 'RED':
 							score_temp[0] += p.deathtotal
 						if p.team == 'BLU':
 							score_temp[1] += p.deathtotal
-					test_array.append([demoname,match_map,'score_log','','BLU',math.floor(t2/t_bundle_step)*t_bundle_step,'',score_temp[0],'','','','','',lineuid,''])
-					test_array.append([demoname,match_map,'score_log','','RED',math.floor(t2/t_bundle_step)*t_bundle_step,'',score_temp[1],'','','','','',lineuid,''])
+					csvw.writerow([demoname,match_map,'score_log','','BLU',math.floor(t2/t_bundle_step)*t_bundle_step,'',score_temp[0],'','','','','',lineuid,''])
+					csvw.writerow([demoname,match_map,'score_log','','RED',math.floor(t2/t_bundle_step)*t_bundle_step,'',score_temp[1],'','','','','',lineuid,''])
 					t_bundle = 0
 				t = t2
 
@@ -553,31 +552,31 @@ def main(arg1,quiet):
 	with open(arg1+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
 		for p in players.values(): # append stats
-			test_array.append([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
-			test_array.append([demoname,match_map,'log',p.name,p.team,matchtime,'',0,'','','',0])
+			csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
+			csvw.writerow([demoname,match_map,'log',p.name,p.team,matchtime,'',0,'','','',0])
 
-			test_array.append([demoname,match_map,'greens_log',p.name,p.team,0,'','','','','','','','',20])
-			test_array.append([demoname,match_map,'greens_log',p.name,p.team,matchtime,'','','','','','','',lineuid,p.greens])
-			test_array.append([demoname,match_map,'greens_log','','',0,'','','','','','','','',0])
+			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,0,'','','','','','','','',20])
+			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,matchtime,'','','','','','','',lineuid,p.greens])
+			csvw.writerow([demoname,match_map,'greens_log','','',0,'','','','','','','','',0])
 
-			test_array.append([demoname,match_map,'hp_log',p.name,p.team,0,'','','','','','','',lineuid,0])
-			test_array.append([demoname,match_map,'hp_log',p.name,p.team,matchtime,'','','','','','','',lineuid,-p.totaldmgtaken])
-			test_array.append([demoname,match_map,'hp_log','','',0,'','','','','','','','',0])
+			csvw.writerow([demoname,match_map,'hp_log',p.name,p.team,0,'','','','','','','',lineuid,0])
+			csvw.writerow([demoname,match_map,'hp_log',p.name,p.team,matchtime,'','','','','','','',lineuid,-p.totaldmgtaken])
+			csvw.writerow([demoname,match_map,'hp_log','','',0,'','','','','','','','',0])
 
-			test_array.append([demoname,match_map,'score_log','','BLU',0,'',0,'','','','','','',''])
-			test_array.append([demoname,match_map,'score_log','','RED',0,'',0,'','','','','','',''])
+			csvw.writerow([demoname,match_map,'score_log','','BLU',0,'',0,'','','','','','',''])
+			csvw.writerow([demoname,match_map,'score_log','','RED',0,'',0,'','','','','','',''])
 
 			for stat, value in p.stats.items():
-				test_array.append([demoname,match_map,'stats'     ,p.name,p.team,'','','',stat,'','','',value])
+				csvw.writerow([demoname,match_map,'stats'     ,p.name,p.team,'','','',stat,'','','',value])
 			for ac, count in p.atkchains.items():
-				test_array.append([demoname,match_map,'atk_chains',p.name,p.team,'','','',ac,  '','','',count])
+				csvw.writerow([demoname,match_map,'atk_chains',p.name,p.team,'','','',ac,  '','','',count])
 			# [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,value,lineuid]
 
 
 		for gathertime in gathertimes['BLU']:
-			test_array.append([demoname,match_map,'gathers','','BLU',gathertime])		
+			csvw.writerow([demoname,match_map,'gathers','','BLU',gathertime])		
 		for gathertime in gathertimes['RED']:
-			test_array.append([demoname,match_map,'gathers','','RED',gathertime])
+			csvw.writerow([demoname,match_map,'gathers','','RED',gathertime])
 
 		# 'rogues' to csv (attacks + greens not as target)
 		for r in rogues:
@@ -588,7 +587,7 @@ def main(arg1,quiet):
 			if p1 == p2:
 				p2 = '-'
 				t2 = '-'
-			test_array.append([demoname,match_map,'rogue_log',p1,t1,r[0],'','',r[2],p2,t2,'','',''])
+			csvw.writerow([demoname,match_map,'rogue_log',p1,t1,r[0],'','',r[2],p2,t2,'','',''])
 
 		suid = 1 # spike uid
 		spikes.sort(key=lambda x: x.start) # sort spikes by start time
@@ -607,7 +606,7 @@ def main(arg1,quiet):
 					hit_time = round(act[4] - s.start,2)
 					if act[2] not in hitexclude and hit_time < first_hit:
 						first_hit = hit_time
-				test_array.append([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,act[3],hit_time])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,act[3],hit_time])
 			
 			for act in s.heals:
 				healer = players[act[1]].name
@@ -617,38 +616,38 @@ def main(arg1,quiet):
 				hit_time = act[4]
 				if isinstance(act[4],float):
 					hit_time = round(act[4] - s.start,2)
-				test_array.append([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,act[3],hit_time])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,act[3],hit_time])
 
 			for act in s.evades:
 				act_time = round(act[0] - s.start,2)
 				hit_time = ''
 				if act[2] in hittiming:
 					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
-				test_array.append([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,'',hit_time])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,'',hit_time])
 
 			if s.debufftime:
 				debufftime = round(s.debufftime - s.start,2)
 				if debufftime <= 0:
-					test_array.append([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res painted','--','','','',suid])
+					csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res painted','--','','','',suid])
 				else:
-					test_array.append([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res hit','--','','','',suid])
+					csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res hit','--','','','',suid])
 
 			if s.kbtime:
 				kbtime = round(s.kbtime - s.start,2)
-				test_array.append([demoname,match_map,'spike_log',s.target,s.team,kbtime,'',s.death,'knocked','!','','','',suid])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,kbtime,'',s.death,'knocked','!','','','',suid])
 
 			if s.spikedeath:
-				test_array.append([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,2),'',s.death,'death','x','','','',suid,'',round(s.spikedeath,2)])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,2),'',s.death,'death','x','','','',suid,'',round(s.spikedeath,2)])
 				
 			# graphing spike hp
 			if len(s.hp)>1:
 				for hp in s.hp:
 					hptime = round(hp[0]-s.start,2)
-					test_array.append([demoname,match_map,'spike_hp',s.target,s.team,hptime,hp[1],s.death,'','','','','',suid])
+					csvw.writerow([demoname,match_map,'spike_hp',s.target,s.team,hptime,hp[1],s.death,'','','','','',suid])
 
 			# spike stats
 			for stat,value in s.stats.items():
-				test_array.append([demoname,match_map,'spike_stats',s.target,s.team,'','',s.death,stat,'','','',value,suid])
+				csvw.writerow([demoname,match_map,'spike_stats',s.target,s.team,'','',s.death,stat,'','','',value,suid])
 			
 
 			hit_window = ''
@@ -663,7 +662,7 @@ def main(arg1,quiet):
 				s2s_time[s.team] = s.start - s2s_last[s.team] # time since last spike
 				s2s_last[s.team] = s.start
 				
-			test_array.append([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used'], hit_window, s2s_time[s.team],s.stats['heals received']]) #7
+			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used'], hit_window, s2s_time[s.team],s.stats['heals received']]) #7
 			suid += 1 # spike uid
 
 
@@ -889,35 +888,35 @@ def main(arg1,quiet):
 				])
 			if p.support: # write data for support players
 				for extra, count in p.supportextras.items():
-					test_array.append([demoname,match_map,'support_extras',p.name,p.team,'','','',p.set1,extra,targetteam,'',  '',''      ,count])
+					csvw.writerow([demoname,match_map,'support_extras',p.name,p.team,'','','',p.set1,extra,targetteam,'',  '',''      ,count])
 				
 				healpowers = [demoname,match_map,'support_powers',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
 				for power, count in p.healpowers.items():
 					healpowers.append(count)
-				test_array.append(healpowers)
+				csvw.writerow(healpowers)
 
 				healbin = [demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
 				for hbin, count in p.healbin.items():
 					healbin.append(count)
 
-				test_array.append([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,
+				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,
 					#1			   2		   3			4          5          6           7              8           9           	 10          11             12                 13         14		   15               16        17
 					p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,p.avghealspeed,p.avghealtiming400,p.predicts,p.phaseheals,targeted[p.team],p.cmcount,p.medhealspeed
 				]) # 17
 				
-				test_array.append(healbin)
+				csvw.writerow(healbin)
 
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
-			test_array.append([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
-			test_array.append([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),p.avgspiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.killparticipation/max(score[p.team],1),p.avgspiketimingvar,p.avgspikedist,p.medspiketiming]) # 16
-			test_array.append([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime,len(p.deathtime)]) # 14
+			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
+			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),p.avgspiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.killparticipation/max(score[p.team],1),p.avgspiketimingvar,p.avgspikedist,p.medspiketiming]) # 16
+			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime,len(p.deathtime)]) # 14
 			
 			atktiming = [demoname,match_map,'offence_timing',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
 			for power, count in p.atkbin.items():
 				atktiming.append(count)
 			if p.ontarget > 3: # filter out emps
-				test_array.append(atktiming)
+				csvw.writerow(atktiming)
 
 			total_attacks[p.team]  += p.attacks
 			total_ontarget[p.team] += p.ontarget
@@ -925,20 +924,20 @@ def main(arg1,quiet):
 			total_dmg[p.team] -= p.totaldmgtaken
 
 
-		test_array.append([demoname,match_map,'score_log','','BLU',matchtime,'',deaths['RED'],'','','','','','',''])
-		test_array.append([demoname,match_map,'score_log','','RED',matchtime,'',deaths['BLU'],'','','','','','',''])
+		csvw.writerow([demoname,match_map,'score_log','','BLU',matchtime,'',deaths['RED'],'','','','','','',''])
+		csvw.writerow([demoname,match_map,'score_log','','RED',matchtime,'',deaths['BLU'],'','','','','','',''])
 
 		# fix missing deaths in the score line
 		deaths['RED'] += override.score[1]
 		deaths['BLU'] += override.score[0]
 
-		test_array.append([demoname,match_map,'summary','','','','','','score','', '','',  '',''      			,deaths['RED'],deaths['BLU']])
-		test_array.append([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      	,targets['BLU'],targets['RED']])
-		test_array.append([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      	,round(total_ontarget['BLU']/max(targets['BLU'],1),1),round(total_ontarget['RED']/max(targets['RED'],1),1)])
-		test_array.append([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      	,round(total_attacks['BLU']/max(targets['BLU'],1),1),round(total_attacks['RED']/max(targets['RED'],1),1)])
-		# test_array.append([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      	,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
-		test_array.append([demoname,match_map,'summary','','','','','','dmg taken (K)','', '','',  '',''      		,round(total_dmg['BLU']/1000,0),round(total_dmg['RED']/1000,0)])
-		test_array.append([demoname,match_map,'summary','','','','','','atks thrown','', '','',  '',''      	,total_attacks['BLU'],total_attacks['RED']])
+		csvw.writerow([demoname,match_map,'summary','','','','','','score','', '','',  '',''      			,deaths['RED'],deaths['BLU']])
+		csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      	,targets['BLU'],targets['RED']])
+		csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      	,round(total_ontarget['BLU']/max(targets['BLU'],1),1),round(total_ontarget['RED']/max(targets['RED'],1),1)])
+		csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      	,round(total_attacks['BLU']/max(targets['BLU'],1),1),round(total_attacks['RED']/max(targets['RED'],1),1)])
+		# csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      	,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
+		csvw.writerow([demoname,match_map,'summary','','','','','','dmg taken (K)','', '','',  '',''      		,round(total_dmg['BLU']/1000,0),round(total_dmg['RED']/1000,0)])
+		csvw.writerow([demoname,match_map,'summary','','','','','','atks thrown','', '','',  '',''      	,total_attacks['BLU'],total_attacks['RED']])
 
 	if not quiet:
 		print_table(offence_headers, offence_content)
@@ -950,8 +949,6 @@ def main(arg1,quiet):
 		print(" atks thrown:   " + "\033[0m"  + str(total_attacks['BLU']) + "-" + str(total_attacks['RED'])+'\n')
 		# print(" med spk-spk:   " + "\033[0m"  + str(total_attacks['BLU']) + "-" + str(total_attacks['RED'])+'\n')
 		print("\033[2m" + " see the web report for a full demo breakdown\n" + "\033[0m")
-		print(len(test_array))
-		sys.stdout.flush()
 		# if len(emotes) > 0:
 		# 	print('CHECK EMOTES: ')
 			# print(emotes)
@@ -961,5 +958,5 @@ def main(arg1,quiet):
 if __name__ == "__main__":
 	quiet = False
 	main(sys.argv[1],quiet)
-
-main(sys.argv[1], False)
+  
+main(sys.argv[1], True)
