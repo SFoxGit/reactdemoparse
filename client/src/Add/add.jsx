@@ -2,6 +2,7 @@ import React from 'react'
 import { Container } from 'react-bootstrap'
 import { readString } from 'react-papaparse';
 import { useHistory } from "react-router";
+import axios from "axios";
 
 export default function Add(props) {
   const history = useHistory();
@@ -82,11 +83,11 @@ export default function Add(props) {
         x.actions.forEach(e => {
           if (e.hitTime < (x.actions[deathIndex].hitTime + 0.12) && e.distance > 0) {
             const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
-            summaryStatsArr[playerIndex].atksOnDeath = (summaryStatsArr[playerIndex].atksOnDeath+1);
-            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS+1);
+            summaryStatsArr[playerIndex].atksOnDeath = (summaryStatsArr[playerIndex].atksOnDeath + 1);
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS + 1);
           } else if (e.distance > 0) {
             const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
-            summaryStatsArr[playerIndex].atksAfterDeath = (summaryStatsArr[playerIndex].atksAfterDeath+1);
+            summaryStatsArr[playerIndex].atksAfterDeath = (summaryStatsArr[playerIndex].atksAfterDeath + 1);
           }
         })
       } else if (x.actions.some(e => e.action === "phase shift" || e.action === "hibernate")) {
@@ -94,17 +95,17 @@ export default function Add(props) {
         x.actions.forEach(e => {
           if (e.time < (x.actions[phaseIndex].hitTime + 0.12) && e.distance > 0) {
             const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
-            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS+1);
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS + 1);
           } else if (e.distance > 0) {
             const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
-            summaryStatsArr[playerIndex].atksIntoPS = (summaryStatsArr[playerIndex].atksIntoPS+1);
+            summaryStatsArr[playerIndex].atksIntoPS = (summaryStatsArr[playerIndex].atksIntoPS + 1);
           }
         })
       } else {
         x.actions.forEach(e => {
           if (e.distance > 0) {
             const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
-            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS+1);
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS + 1);
           }
         })
       }
@@ -145,7 +146,8 @@ export default function Add(props) {
       <div className="App">
         <input
           type="file"
-          accept=".csv,.xlsx,.xls"
+          // accept=".csv,.xlsx,.xls"
+          accept=".cohdemo"
           onChange={(e) => {
             const files = e.target.files;
             console.log(files);
@@ -153,11 +155,25 @@ export default function Add(props) {
               console.log(files[0]);
               readString(files[0], {
                 complete: function (results) {
-                  setMatchData(results.data);
-                  formatData(results.data);
+                  axios.post('/api/parse', { file: results })
+                    .then(res => {
+                      // setMatchData(res.data)
+                      // formatData(res.data)
+                      console.log(res.data)
+                    })
+                    .catch(err => console.log(err))
+                  // setMatchData(results.data);
+                  // formatData(results.data);
                 }
-              }
-              )
+
+                // readString(files[0], {
+                //   complete: function (results) {
+                //     setMatchData(results.data);
+                //     formatData(results.data);
+                //   }
+                // }
+                // )
+              })
             }
           }}
         />

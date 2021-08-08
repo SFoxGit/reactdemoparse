@@ -6,7 +6,6 @@ import { useHistory } from "react-router-dom";
 export default function Login(props) {
   const setUserId = props.setUserId
   const setLoggedIn = props.setLoggedIn
-  const setName = props.setName
   const history = useHistory()
   const loginEmail = useRef();
   const loginUsername = useRef();
@@ -22,7 +21,6 @@ export default function Login(props) {
         .then(async res => {
           await setUserId(res.data.id)
           await setLoggedIn(true);
-          await setName(res.data.name)
           history.push('/')
         })
         .catch(err => console.log(err))
