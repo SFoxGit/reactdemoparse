@@ -29,7 +29,7 @@ export default function SummaryStats(props) {
           {summaryStats.length ? summaryStats.map(data => {
             if (data.match === match || data.match === "match") {
               return (
-                <tr>
+                <tr key={data.player}>
                   <td>{data.player}</td>
                   <td>{data.team}</td>
                   <td>{data.powerset}</td>

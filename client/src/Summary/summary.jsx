@@ -17,7 +17,7 @@ export default function Summary(props) {
         {summary.length ? summary.map(data => {
           if (data.match === match) {
             return (
-              <tr>
+              <tr key={data.title}>
                 <td>{data.title}</td>
                 <td>{data.blue}</td>
                 <td>{data.red}</td>
