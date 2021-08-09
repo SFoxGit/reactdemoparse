@@ -3,6 +3,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap'
 import CollectionForm from './collection.form'
 
 export default function Collection(props) {
+  const userId = props.userId
   const collection = props.collection
   const setCollection = props.setCollection
   const [showForm, setShowForm] = useState(false)
@@ -11,7 +12,7 @@ export default function Collection(props) {
       <Row>
         <Button onClick={() => setShowForm(!showForm)}>Add New</Button>
       </Row>
-      {showForm ? <CollectionForm setCollection={setCollection} /> : null}
+      {showForm ? <CollectionForm setCollection={setCollection} userId={userId} /> : null}
       {collection.length ? collection.map(element => (
         <Row key={element.name}>
           <Col>{element.name}</Col>

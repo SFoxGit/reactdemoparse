@@ -56,6 +56,7 @@ function App() {
           <Collection
             collection={collection}
             setCollection={setCollection}
+            userId={userId}
           />
         </Route>
       </Switch>

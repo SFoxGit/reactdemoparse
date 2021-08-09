@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 
-class Collection extends Model {}
+class Collection extends Model { }
 
 Collection.init(
   {
@@ -28,11 +28,13 @@ Collection.init(
         key: "id",
       },
     },
+  },
+  {
     sequelize,
     freezeTableName: true,
     underscored: true,
     modelName: "collection",
-  }
+  },
 )
 
 module.exports = Collection;
