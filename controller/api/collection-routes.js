@@ -5,6 +5,15 @@ const withAuth = require('../../utils/auth');
 router.get("/", function (req, res, next) {
   res.status(200).send("test");
 });
+router.get("/:id", async (req, res, next) => {
+  try {
+    const collectionData = await Collection.findByPk(req.params.id)
+    const formatData = await JSON.parse(JSON.stringify(collectionData))
+    res.status(200).json(formatData)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+});
 
 router.post("/", async (req, res) => {
   try {

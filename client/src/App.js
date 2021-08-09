@@ -8,6 +8,7 @@ import { useState } from 'react';
 import Login from './Login/login';
 import CollectionForm from './Collection/collection.form';
 import Collection from './Collection/collection';
+import SummaryStats from './SummaryStats/summary.stats';
 
 function App() {
   const [matchData, setMatchData] = useState();
@@ -52,11 +53,23 @@ function App() {
             setSpikeLog={setSpikeLog}
           />
         </Route>
-        <Route exact path="/collection">
+        <Route exact path="/collections">
           <Collection
             collection={collection}
             setCollection={setCollection}
             userId={userId}
+          />
+        </Route>
+        <Route exact path="/match/:id">
+          <Results
+            matchData={matchData}
+            setSummaryStats={setSummaryStats}
+            summaryStats={summaryStats}
+            match={match}
+            setMatch={setMatch}
+            matches={matches}
+            summary={summary}
+            spikeLog={spikeLog}
           />
         </Route>
       </Switch>

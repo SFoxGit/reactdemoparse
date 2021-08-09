@@ -20,7 +20,7 @@ const sess = {
   resave: false,
   saveUninitialized: true,
   cookie: {
-    expires: 3600000
+    expires: 36000000000000000000000000
   }
 };
 
