@@ -6,6 +6,8 @@ import Results from './Results/results';
 import Add from './Add/add'
 import { useState } from 'react';
 import Login from './Login/login';
+import CollectionForm from './Collection/collection.form';
+import Collection from './Collection/collection';
 
 function App() {
   const [matchData, setMatchData] = useState();
@@ -16,6 +18,7 @@ function App() {
   const [spikeLog, setSpikeLog] = useState([])
   const [loggedIn, setLoggedIn] = useState(false)
   const [userId, setUserId] = useState()
+  const [collection, setCollection] = useState([])
 
   return (
     <Router>
@@ -25,27 +28,34 @@ function App() {
           <Homepage />
         </Route>
         <Route exact path="/login">
-          <Login setLoggedIn={setLoggedIn} setUserId={setUserId}/>
+          <Login setLoggedIn={setLoggedIn} setUserId={setUserId} />
         </Route>
         <Route exact path="/results">
-          <Results 
-          matchData={matchData} 
-          setSummaryStats={setSummaryStats} 
-          summaryStats={summaryStats} 
-          match={match}
-          setMatch={setMatch}
-          matches={matches}
-          summary={summary}
-          spikeLog={spikeLog}
+          <Results
+            matchData={matchData}
+            setSummaryStats={setSummaryStats}
+            summaryStats={summaryStats}
+            match={match}
+            setMatch={setMatch}
+            matches={matches}
+            summary={summary}
+            spikeLog={spikeLog}
           />
         </Route>
         <Route exact path="/add">
-          <Add 
-          setMatchData={setMatchData} 
-          setSummaryStats={setSummaryStats}
-          setSummary={setSummary}
-          setMatches={setMatches}
-          setSpikeLog={setSpikeLog}
+          <CollectionForm />
+          <Add
+            setMatchData={setMatchData}
+            setSummaryStats={setSummaryStats}
+            setSummary={setSummary}
+            setMatches={setMatches}
+            setSpikeLog={setSpikeLog}
+          />
+        </Route>
+        <Route exact path="/collection">
+          <Collection
+            collection={collection}
+            setCollection={setCollection}
           />
         </Route>
       </Switch>

@@ -146,7 +146,6 @@ export default function Add(props) {
       <div className="App">
         <input
           type="file"
-          // accept=".csv,.xlsx,.xls"
           accept=".cohdemo"
           onChange={(e) => {
             const files = e.target.files;
@@ -155,8 +154,6 @@ export default function Add(props) {
             if (files) {
               formData.append("file", files[0])
               console.log(files[0]);
-              // readString(files[0], {
-              //   complete: function (results) {
               axios.post('/api/parse', formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data'
@@ -167,8 +164,6 @@ export default function Add(props) {
                   formatData(res.data)
                 })
                 .catch(err => console.log(err))
-              // }
-              // })
             }
           }}
 
@@ -181,8 +176,6 @@ export default function Add(props) {
         // )
         />
       </div>
-
-
     </Container>
   )
 }

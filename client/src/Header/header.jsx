@@ -13,6 +13,7 @@ function Header() {
           <Nav className="ml-auto">
             <Nav.Link as={Link} to="/results">Results</Nav.Link>
             <Nav.Link as={Link} to="/add">Add</Nav.Link>
+            <Nav.Link as={Link} to="/collection">Collections</Nav.Link>
             <Nav.Link as={Link} to="/login">Login</Nav.Link>
           </Nav>
         </Navbar.Collapse>
