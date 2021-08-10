@@ -1,11 +1,12 @@
 const router = require('express').Router();
-const { spawn } = require('child_process');
+// const { spawn } = require('child_process');
+const spawn = require('await-spawn')
 const pythonDir = ("C:/Users/16073/Desktop/Code/reactdemoparse/parsedemo.py")
 const fs = require('fs')
 const { Match } = require("../../models");
 
 
-router.post("/", async (req, res) => {
+router.post("/:id", async (req, res) => {
   console.log(pythonDir)
   try {
     const newpath = "C:/Users/16073/Desktop/Code/reactdemoparse/"
@@ -38,7 +39,7 @@ router.post("/", async (req, res) => {
         res.status(500).send({ message: "File upload failed", code: 200 });
       }
     });
-    await spawn('python', [pythonDir, `${newpath}${filename}`])
+    await spawn('python', [pythonDir, `${newpath}${filename}`]);
     const csvArray = await fs.readFileSync(`${newpath}${filename}.csv`)
       .toString()
       .split('\n')
@@ -138,7 +139,7 @@ router.post("/", async (req, res) => {
           spike_summary.push({ player: row[3], team: row[4], start: row[5], duration: row[6], death: row[7], attacks: row[11], attackers: row[12], id: row[13], hpLost: row[14], greensAvailable: row[15], greensUsed: row[16], hitWindow: row[17], spikeToSpike: row[18], healsReceived: row[19] })
           break;
         case "summary":
-          summary.push({ title: row[8], blue: row[14], red: row[15] })
+          summary.push({ map: row[1], title: row[8], blue: row[14], red: row[15] })
           break;
         case "summary_stats":
           summary_stats.push({ player: row[3], team: row[4], powersets: row[8], deaths: row[14], targets: row[15], survival: row[16], otp: row[17], ohp: row[18] })
@@ -162,18 +163,7 @@ router.post("/", async (req, res) => {
           break;
 
       }
-    })
-    console.log("score_log: " + score_log)
-    console.log("spike_hp: " + spike_hp)
-    console.log("spike_log: " + spike_log)
-    console.log("spike_stats: " + spike_stats)
-    console.log("spike_summary: " + spike_summary)
-    console.log("summary: " + summary)
-    console.log("summary_stats: " + summary_stats)
-    console.log("support_breakdown: " + support_breakdown)
-    console.log("support_extras: " + support_extras)
-    console.log("support_powers: " + support_powers)
-    console.log("support_stats: " + support_stats)
+    });
     await Match.create({
       atk_chains: atk_chains,
       defence_stats: defence_stats,
@@ -195,8 +185,25 @@ router.post("/", async (req, res) => {
       support_extras: support_extras,
       support_powers: support_powers,
       support_stats: support_stats,
-    })
-    res.status(200).json(csvArray)
+      collection_id: req.params.id
+    });
+    await fs.unlink(`${newpath}${filename}`, (err) => {
+      if (err) {
+        res.status(500).send({ message: "File deletion failed", code: 200 });
+      }
+    });
+    await fs.unlink(`${newpath}${filename}.csv`, (err) => {
+      if (err) {
+        res.status(500).send({ message: "File deletion failed", code: 200 });
+      }
+    });
+    const matches = await Match.findAll({
+      where: {
+        collection_id: req.params.id
+      }
+    });
+    const formatMatches = await JSON.parse(JSON.stringify(matches));
+    res.status(200).json(formatMatches)
   } catch (err) {
     console.log(err)
     res.status(500).json(err);

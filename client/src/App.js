@@ -43,8 +43,7 @@ function App() {
             spikeLog={spikeLog}
           />
         </Route>
-        <Route exact path="/add">
-          <CollectionForm />
+        <Route exact path="/add/:id">
           <Add
             setMatchData={setMatchData}
             setSummaryStats={setSummaryStats}

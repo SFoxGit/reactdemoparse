@@ -3,8 +3,10 @@ import { Container } from 'react-bootstrap'
 import { readString } from 'react-papaparse';
 import { useHistory } from "react-router";
 import axios from "axios";
+import { useParams } from 'react-router-dom';
 
 export default function Add(props) {
+  const {id} = useParams()
   const history = useHistory();
   const setMatchData = props.setMatchData;
   const setSummaryStats = props.setSummaryStats;
@@ -154,7 +156,7 @@ export default function Add(props) {
             if (files) {
               formData.append("file", files[0])
               console.log(files[0]);
-              axios.post('/api/parse', formData, {
+              axios.post(`/api/parse/${id}`, formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 }
