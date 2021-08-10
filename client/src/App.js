@@ -11,7 +11,7 @@ import Collection from './Collection/collection';
 import SummaryStats from './SummaryStats/summary.stats';
 
 function App() {
-  const [matchData, setMatchData] = useState();
+  const [matchData, setMatchData] = useState([]);
   const [summaryStats, setSummaryStats] = useState([]);
   const [summary, setSummary] = useState([]);
   const [match, setMatch] = useState(1);
@@ -68,7 +68,11 @@ function App() {
             setMatch={setMatch}
             matches={matches}
             summary={summary}
+            setSummary={setSummary}
             spikeLog={spikeLog}
+            setMatches={setMatches}
+            setMatchData={setMatchData}
+
           />
         </Route>
       </Switch>

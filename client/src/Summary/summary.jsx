@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table } from 'react-bootstrap'
 
 export default function Summary(props) {
   const summary = props.summary
+  const setSummary = props.setSummary
   const match = props.match
+  const matchData = props.matchData
+
+  useEffect(() => {
+    const objIndex = matchData.findIndex((obj => obj.id === match))
+    setSummary(matchData[objIndex].summary)
+  }, [setSummary, match, matchData])
   return (
     <Table striped bordered hover variant="dark" className="sortable">
       <thead>
@@ -15,7 +22,7 @@ export default function Summary(props) {
       </thead>
       <tbody>
         {summary.length ? summary.map(data => {
-          if (data.match === match) {
+          
             return (
               <tr key={data.title}>
                 <td>{data.title}</td>
@@ -23,9 +30,7 @@ export default function Summary(props) {
                 <td>{data.red}</td>
               </tr>
             )
-          } else {
-            return (null)
-          }
+          
         }
         )
           :

@@ -5,6 +5,20 @@ const withAuth = require('../../utils/auth');
 router.get("/", function (req, res, next) {
   res.status(200).send("test");
 });
+router.get("/all/:id", async (req, res, next) => {
+  console.log(req.params.id)
+  try {
+    const collections = await Collection.findAll({
+      where: {
+        owner: req.params.id
+      }
+    });
+    const formatCollections = await JSON.parse(JSON.stringify(collections));
+    res.status(200).json(formatCollections)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+});
 router.get("/:id", async (req, res, next) => {
   try {
     const collectionData = await Collection.findByPk(req.params.id)

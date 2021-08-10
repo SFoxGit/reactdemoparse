@@ -142,7 +142,7 @@ router.post("/:id", async (req, res) => {
           summary.push({ map: row[1], title: row[8], blue: row[14], red: row[15] })
           break;
         case "summary_stats":
-          summary_stats.push({ player: row[3], team: row[4], powersets: row[8], deaths: row[14], targets: row[15], survival: row[16], otp: row[17], ohp: row[18] })
+          summary_stats.push({ player: row[3], team: row[4], powersets: row[8], deaths: row[14], targets: row[15], survival: row[16], otp: row[17], ohp: row[18] , atks: row[19]})
           break;
         case "support_breakdown":
           support_breakdown.push({ player: row[3], team: row[4], type: row[8], zero: row[14], oneHundred: row[15], belowSeventeen: row[16], fourHundred: row[17], eightHundred: row[18], twelveHundred: row[19], fifteenHundred: row[20], twoHundred: row[21], aboveSeventeen: row[22], late: row[23], lateFast: row[24] })
@@ -164,6 +164,39 @@ router.post("/:id", async (req, res) => {
 
       }
     });
+    await spikeLogArr.forEach(x => {
+      if (x.actions.some(e => e.action === "death")) {
+        const deathIndex = x.actions.findIndex((obj => obj.action === "death"))
+        x.actions.forEach(e => {
+          if (e.hitTime < (x.actions[deathIndex].hitTime + 0.12) && e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksOnDeath = (summaryStatsArr[playerIndex].atksOnDeath + 1);
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS + 1);
+          } else if (e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksAfterDeath = (summaryStatsArr[playerIndex].atksAfterDeath + 1);
+          }
+        })
+      } else if (x.actions.some(e => e.action === "phase shift" || e.action === "hibernate")) {
+        const phaseIndex = x.actions.findIndex((obj => obj.action === "phase shift" || obj.action === "hibernate"))
+        x.actions.forEach(e => {
+          if (e.time < (x.actions[phaseIndex].hitTime + 0.12) && e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS + 1);
+          } else if (e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksIntoPS = (summaryStatsArr[playerIndex].atksIntoPS + 1);
+          }
+        })
+      } else {
+        x.actions.forEach(e => {
+          if (e.distance > 0) {
+            const playerIndex = summaryStatsArr.findIndex((obj => obj.player === e.player && obj.match === x.match));
+            summaryStatsArr[playerIndex].atksBeforePS = (summaryStatsArr[playerIndex].atksBeforePS + 1);
+          }
+        })
+      }
+    })
     await Match.create({
       atk_chains: atk_chains,
       defence_stats: defence_stats,

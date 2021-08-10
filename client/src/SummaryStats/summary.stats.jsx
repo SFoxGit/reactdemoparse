@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table } from 'react-bootstrap'
 
 export default function SummaryStats(props) {
   const summaryStats = props.summaryStats
+  const setSummaryStats = props.setSummaryStats
   const match = props.match
+  const matchData = props.matchData
+
+  useEffect(() => {
+    const objIndex = matchData.findIndex((obj => obj.id === match))
+    setSummaryStats(matchData[objIndex].summary_stats)
+  }, [match, matchData, setSummaryStats])
 
   return (
     <>
@@ -27,27 +34,25 @@ export default function SummaryStats(props) {
         </thead>
         <tbody>
           {summaryStats.length ? summaryStats.map(data => {
-            if (data.match === match || data.match === "match") {
-              return (
-                <tr key={data.player}>
-                  <td>{data.player}</td>
-                  <td>{data.team}</td>
-                  <td>{data.powerset}</td>
-                  <td>{data.deaths}</td>
-                  <td>{data.targets}</td>
-                  <td>{data.survival}</td>
-                  <td>{data.otp}</td>
-                  <td>{data.heal}</td>
-                  <td>{data.atks}</td>
-                  <td>{data.atksOnDeath}</td>
-                  <td>{data.atksBeforePS}</td>
-                  <td>{data.atksAfterDeath}</td>
-                  <td>{data.atksIntoPS}</td>
-                </tr>
-              )
-            } else {
-              return (null)
-            }
+
+            return (
+              <tr key={data.player}>
+                <td>{data.player}</td>
+                <td>{data.team}</td>
+                <td>{data.powersets}</td>
+                <td>{data.deaths}</td>
+                <td>{data.targets}</td>
+                <td>{(data.survival* 100).toFixed(2) + '%'}</td>
+                <td>{data.otp ? (data.otp* 100).toFixed(2) + '%' : null}</td>
+                <td>{data.ohp ? (data.ohp* 100).toFixed(2) + '%' : null}</td>
+                <td>{data.atks}</td>
+                <td>{data.atksOnDeath}</td>
+                <td>{data.atksBeforePS}</td>
+                <td>{data.atksAfterDeath}</td>
+                <td>{data.atksIntoPS}</td>
+              </tr>
+            )
+
           })
             :
             null}
