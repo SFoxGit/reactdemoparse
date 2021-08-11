@@ -49,11 +49,11 @@ router.post("/:id", async (req, res) => {
       csvArray.forEach(row => {
         switch (row[2]) {
           case "atk_chains":
-            if (atk_chains.some(e => e.player === row[3])) {
-              const objIndex = atk_chains.findIndex((obj => obj.player === row[3]))
-              atk_chains[objIndex].chains.push({ atks: row[8], count: row[12] })
+            if (summary_stats.some(e => e.player === row[3])) {
+              const objIndex = summary_stats.findIndex((obj => obj.player === row[3]))
+              summary_stats[objIndex].chains.push({ atks: row[8], count: row[12] })
             } else {
-              atk_chains.push({ player: row[3], team: row[4], chains: [{ atks: row[8], count: row[12] }] })
+              summary_stats.push({ player: row[3], team: row[4], chains: [{ atks: row[8], count: row[12] }] })
             }
             break;
           case "defence_stats":
@@ -143,7 +143,18 @@ router.post("/:id", async (req, res) => {
             summary.push({ map: row[1], title: row[8], blue: row[14], red: row[15] })
             break;
           case "summary_stats":
-            summary_stats.push({ player: row[3], team: row[4], powersets: row[8], deaths: row[14], targets: row[15], survival: row[16], otp: row[17], ohp: row[18] , atks: row[19]})
+            if (summary_stats.some(e => e.player === row[3])) {
+              const objIndex = summary_stats.findIndex((obj => obj.player === row[3]));
+              summary_stats[objIndex].powersets = row[8]
+              summary_stats[objIndex].deaths = row[14]
+              summary_stats[objIndex].targets = row[15]
+              summary_stats[objIndex].survival = row[16]
+              summary_stats[objIndex].otp = row[17]
+              summary_stats[objIndex].ohp = row[18] 
+              summary_stats[objIndex].atks = row[19]
+            } else {
+              summary_stats.push({ player: row[3], team: row[4], powersets: row[8], deaths: row[14], targets: row[15], survival: row[16], otp: row[17], ohp: row[18] , atks: row[19]})
+            }
             break;
           case "support_breakdown":
             support_breakdown.push({ player: row[3], team: row[4], type: row[8], zero: row[14], oneHundred: row[15], belowSeventeen: row[16], fourHundred: row[17], eightHundred: row[18], twelveHundred: row[19], fifteenHundred: row[20], twoHundred: row[21], aboveSeventeen: row[22], late: row[23], lateFast: row[24] })

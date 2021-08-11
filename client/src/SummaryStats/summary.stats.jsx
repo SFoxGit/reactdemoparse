@@ -26,10 +26,10 @@ export default function SummaryStats(props) {
             <th>otp</th>
             <th>heal</th>
             <th>atks</th>
-            <th>Atks on Kill</th>
+            {/* <th>Atks on Kill</th>
             <th>Atks b4 PS</th>
             <th>Atk after Kill</th>
-            <th>Atks in2 PS</th>
+            <th>Atks in2 PS</th> */}
           </tr>
         </thead>
         <tbody>
@@ -46,10 +46,10 @@ export default function SummaryStats(props) {
                 <td>{data.otp ? (data.otp* 100).toFixed(2) + '%' : null}</td>
                 <td>{data.ohp ? (data.ohp* 100).toFixed(2) + '%' : null}</td>
                 <td>{data.atks}</td>
-                <td>{data.atksOnDeath}</td>
+                {/* <td>{data.atksOnDeath}</td>
                 <td>{data.atksBeforePS}</td>
                 <td>{data.atksAfterDeath}</td>
-                <td>{data.atksIntoPS}</td>
+                <td>{data.atksIntoPS}</td> */}
               </tr>
             )
 

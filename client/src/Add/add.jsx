@@ -134,7 +134,7 @@ export default function Add(props) {
     setSummaryStats(summaryStatsArr)
     setSummary(summaryArr)
     setSpikeLog(spikeLogArr)
-    history.push('/results')
+    history.push('/collections')
   }
 
 
