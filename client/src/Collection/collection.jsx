@@ -29,7 +29,7 @@ export default function Collection(props) {
       {collection.length ? collection.map(element => (
         <Row key={element.name}>
           <Col>{element.name}</Col>
-          <Col><Button>View Stats</Button></Col>
+          <Col><Button onClick={() => history.push(`/match/${element.id}`)}>View Stats</Button></Col>
           <Col><Button onClick={() => history.push(`/add/${element.id}`)}>Add Match</Button></Col>
         </Row>)) : null}
     </Container>
