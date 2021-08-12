@@ -14,8 +14,9 @@ export default function Collection(props) {
     if (collection.length === 0) {
       axios.get(`/api/collection/all/${userId}`)
       .then(res => {
-        console.log(res.data)
-        setCollection(res.data)
+        if (res.data) {
+          setCollection(res.data)
+        }
       })
       .catch(err => console.log(err))
     }

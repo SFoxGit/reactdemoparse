@@ -9,13 +9,9 @@ Match.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    atk_chains: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    defence_stats: {
-      type: DataTypes.JSON,
-      allowNull: true,
+    map: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     gathers: {
       type: DataTypes.JSON,
@@ -30,14 +26,6 @@ Match.init(
       allowNull: true,
     },
     log: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    offence_stats: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    offence_timing: {
       type: DataTypes.JSON,
       allowNull: true,
     },

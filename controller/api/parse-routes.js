@@ -13,14 +13,12 @@ router.post("/:id", async (req, res) => {
     const file = req.files.file
     const filename = file.name
 
-    const atk_chains = []
-    const defence_stats = []
+    let map;
+    
     const gathers = []
     const greens_log = []
     const hp_log = []
     const log = []
-    const offence_stats = []
-    const offence_timing = []
     const rogue_log = []
     const score_log = []
     const spike_hp = []
@@ -57,7 +55,18 @@ router.post("/:id", async (req, res) => {
             }
             break;
           case "defence_stats":
-            defence_stats.push({ player: row[3], team: row[4], deaths: row[14], targets: row[15], spikeDam: row[16], healsOnSpike: row[17], healsTaken: row[18], avgJaunt: row[24], avgPhase: row[25], avgDeath: row[26] })
+            if (summary_stats.some(e => e.player === row[3])) {
+              const objIndex = summary_stats.findIndex((obj => obj.player === row[3]))
+              summary_stats[objIndex].spikeDam = row[16]
+              summary_stats[objIndex].healsOnSpike = row[17]
+              summary_stats[objIndex].healsTaken = row[18]
+              summary_stats[objIndex].avgJaunt = row[24]
+              summary_stats[objIndex].avgPhase = row[25]
+              summary_stats[objIndex].avgDeath = row[26]
+            } else {
+              summary_stats.push({ player: row[3], team: row[4], deaths: row[14], targets: row[15], spikeDam: row[16], healsOnSpike: row[17], healsTaken: row[18], avgJaunt: row[24], avgPhase: row[25], avgDeath: row[26] })
+
+            }
             break;
           case "gathers":
             gathers.push({ team: row[4], time: row[5] })
@@ -82,10 +91,26 @@ router.post("/:id", async (req, res) => {
             log.push(row)
             break;
           case "offence_stats":
-            offence_stats.push({ player: row[3], team: row[4], deaths: row[14], targeted: row[15], targetsOn: row[16], otp: row[17], timing: row[18], variance: row[27], kPart: row[26], atksOn: row[23], atksOff: row[24] })
+            if (summary_stats.some(e => e.player === row[3])) {
+              const objIndex = summary_stats.findIndex((obj => obj.player === row[3]));
+              summary_stats[objIndex].targetsOn = row[16]
+              summary_stats[objIndex].otp = row[17]
+              summary_stats[objIndex].timing = row[18]
+              summary_stats[objIndex].variance = row[27]
+              summary_stats[objIndex].kPart = row[26]
+              summary_stats[objIndex].atksOn = row[23]
+              summary_stats[objIndex].atksOff = row[24]
+            } else {
+              summary_stats.push({ player: row[3], team: row[4], deaths: row[14], targeted: row[15], targetsOn: row[16], otp: row[17], timing: row[18], variance: row[27], kPart: row[26], atksOn: row[23], atksOff: row[24] })
+            }
             break;
           case "offence_timing":
-            offence_timing.push({ player: row[3], team: row[4], blast: row[8], early: row[14], one: row[15], two: row[16], three: row[17], four: row[18], five: row[19], six: row[20] })
+            if (summary_stats.some(e => e.player === row[3])) {
+              const objIndex = summary_stats.findIndex((obj => obj.player === row[3]));
+              summary_stats[objIndex].offTiming = { early: row[14], one: row[15], two: row[16], three: row[17], four: row[18], five: row[19], six: row[20] }
+            } else {
+              summary_stats.push({ player: row[3], team: row[4], offTiming: {blast: row[8], early: row[14], one: row[15], two: row[16], three: row[17], four: row[18], five: row[19], six: row[20] }})
+            }
             break;
           case "rogue_log":
             rogue_log.push({ player: row[3], team: row[4], time: row[5], action: row[8], target: row[9], targetTeam: row[10] })
@@ -140,7 +165,8 @@ router.post("/:id", async (req, res) => {
             spike_summary.push({ player: row[3], team: row[4], start: row[5], duration: row[6], death: row[7], attacks: row[11], attackers: row[12], id: row[13], hpLost: row[14], greensAvailable: row[15], greensUsed: row[16], hitWindow: row[17], spikeToSpike: row[18], healsReceived: row[19] })
             break;
           case "summary":
-            summary.push({ map: row[1], title: row[8], blue: row[14], red: row[15] })
+            map = row[1]
+            summary.push({ title: row[8], blue: row[14], red: row[15] })
             break;
           case "summary_stats":
             if (summary_stats.some(e => e.player === row[3])) {
@@ -175,51 +201,48 @@ router.post("/:id", async (req, res) => {
             break;
         }
       });
-      spike_log.forEach(x => {
-        if (x.death === 1) {
-          const deathIndex = x.atkLog.findIndex((obj => obj.atk === "death"))
-          x.atkLog.forEach(e => {
-            if (e.hitTime < (x.atkLog[deathIndex].hitTime + 0.12) && e.distance > 0) {
-              const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
-              summary_stats[playerIndex].atksOnDeath = (summary_stats[playerIndex].atksOnDeath + 1);
-              summary_stats[playerIndex].atksBeforePS = (summary_stats[playerIndex].atksBeforePS + 1);
-            } else if (e.distance > 0) {
-              const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
-              summary_stats[playerIndex].atksAfterDeath = (summary_stats[playerIndex].atksAfterDeath + 1);
-            }
-          })
-        } else if (x.atkLog.some(e => e.atk === "phase shift" || e.atk === "hibernate")) {
-          const phaseIndex = x.atkLog.findIndex((obj => obj.atk === "phase shift" || obj.atk === "hibernate"))
-          x.atkLog.forEach(e => {
-            if (e.time < (x.atkLog[phaseIndex].hitTime + 0.12) && e.distance > 0) {
-              const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
-              summary_stats[playerIndex].atksBeforePS = (summary_stats[playerIndex].atksBeforePS + 1);
-            } else if (e.distance > 0) {
-              const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
-              summary_stats[playerIndex].atksIntoPS = (summary_stats[playerIndex].atksIntoPS + 1);
-            }
-          })
-        } else {
-          x.atkLog.forEach(e => {
-            if (e.distance > 0) {
-              const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
-              summary_stats[playerIndex].atksBeforePS = (summary_stats[playerIndex].atksBeforePS + 1);
-            }
-          })
-        }
-      })
+      // spike_log.forEach(x => {
+      //   if (x.death === 1) {
+      //     const deathIndex = x.atkLog.findIndex((obj => obj.atk === "death"))
+      //     x.atkLog.forEach(e => {
+      //       if (e.hitTime < (x.atkLog[deathIndex].hitTime + 0.12) && e.distance > 0) {
+      //         const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
+      //         summary_stats[playerIndex].atksOnDeath = (summary_stats[playerIndex].atksOnDeath + 1);
+      //         summary_stats[playerIndex].atksBeforePS = (summary_stats[playerIndex].atksBeforePS + 1);
+      //       } else if (e.distance > 0) {
+      //         const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
+      //         summary_stats[playerIndex].atksAfterDeath = (summary_stats[playerIndex].atksAfterDeath + 1);
+      //       }
+      //     })
+      //   } else if (x.atkLog.some(e => e.atk === "phase shift" || e.atk === "hibernate")) {
+      //     const phaseIndex = x.atkLog.findIndex((obj => obj.atk === "phase shift" || obj.atk === "hibernate"))
+      //     x.atkLog.forEach(e => {
+      //       if (e.time < (x.atkLog[phaseIndex].hitTime + 0.12) && e.distance > 0) {
+      //         const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
+      //         summary_stats[playerIndex].atksBeforePS = (summary_stats[playerIndex].atksBeforePS + 1);
+      //       } else if (e.distance > 0) {
+      //         const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
+      //         summary_stats[playerIndex].atksIntoPS = (summary_stats[playerIndex].atksIntoPS + 1);
+      //       }
+      //     })
+      //   } else {
+      //     x.atkLog.forEach(e => {
+      //       if (e.distance > 0) {
+      //         const playerIndex = summary_stats.findIndex((obj => obj.player === e.caster));
+      //         summary_stats[playerIndex].atksBeforePS = (summary_stats[playerIndex].atksBeforePS + 1);
+      //       }
+      //     })
+      //   }
+      // })
       resolve()
     })
     await processCSV
     await Match.create({
-      atk_chains: atk_chains,
-      defence_stats: defence_stats,
+      map: map,
       gathers: gathers,
       greens_log: greens_log,
       hp_log: hp_log,
       log: log,
-      offence_stats: offence_stats,
-      offence_timing: offence_timing,
       rogue_log: rogue_log,
       score_log: score_log,
       spike_hp: spike_hp,
