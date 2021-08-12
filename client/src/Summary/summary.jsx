@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Table } from 'react-bootstrap'
+import { Col, Row, Table } from 'react-bootstrap'
 
 export default function Summary(props) {
   const summary = props.summary
@@ -14,7 +14,7 @@ export default function Summary(props) {
   return (
     <Table striped bordered hover variant="dark" className="sortable">
       <thead>
-        <tr>
+        <tr style={{ textAlign: 'center' }}>
           <th></th>
           <th>Blue</th>
           <th>Red</th>
@@ -22,15 +22,26 @@ export default function Summary(props) {
       </thead>
       <tbody>
         {summary.length ? summary.map(data => {
-          
-            return (
-              <tr key={data.title}>
-                <td>{data.title}</td>
-                <td>{data.blue}</td>
-                <td>{data.red}</td>
-              </tr>
-            )
-          
+          let redStyle;
+          let blueStyle;
+          if (data.blue > data.red) {
+            blueStyle = {color: 'cyan', border: '2px dotted gold'}
+            redStyle = {color: 'indianred'}
+          } else if (data.blue < data.red) {
+            blueStyle = {color: 'cyan'}
+            redStyle = {color: 'indianred',  border: '2px dotted gold' }
+          } else {
+            blueStyle = {color: 'cyan'}
+            redStyle = {color: 'indianred'}
+          }
+          return (
+            <tr key={data.title} style={{ textAlign: 'center' }}>
+              <td>{data.title}</td>
+              <td><div style={blueStyle}>{data.blue}</div></td>
+              <td><div style={redStyle}>{data.red}</div></td>
+            </tr>
+          )
+
         }
         )
           :
