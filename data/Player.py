@@ -300,16 +300,17 @@ class Player:
 							if atk[0]<h[0]: # num of attacks cast before heal thrown
 								atkcount += 1
 
-						if self.death == 1 and h[4] > self.lastdeath/1000 + 1/30: # if death and heal hits after death time (plus 1 tick leeway)
+						if self.death == 1 and h[4] > self.lastdeath/1000: # if death and heal hits after death time (plus 1 tick leeway)
 							players[h[1]].heallate += 1
+							players[h[1]].healontarget -= 1
 
 							if (h[0] - self.targetstart) < 1.5: # if late, but cast fast
 								players[h[1]].healbin[99999] += 1 # late (fast)
 							else:
 								players[h[1]].healbin[9999] += 1 # late (normal)
 
-							if h[0] > self.targetstart + 2.5: # if heal is SLOW on top of being LATE
-								players[h[1]].healontarget -= 0.5 # half 
+							# if h[0] > self.targetstart + 2.5: # if heal is SLOW on top of being LATE
+							# 	players[h[1]].healontarget -= 1 # half 
 
 						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg100 - 1/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
 							players[h[1]].healearly += 1
@@ -319,7 +320,7 @@ class Player:
 							players[h[1]].healontime += 1
 						else:
 							players[h[1]].healslow += 1
-							players[h[1]].healontarget -= 0.5 # half credit for slow first heals
+							players[h[1]].healontarget -= 1 # half credit for slow first heals
 
 						players[h[1]].healontarget += 1 # times on a heal target
 					

@@ -7,6 +7,16 @@ export default function SummaryStats(props) {
   const match = props.match
   const matchData = props.matchData
 
+  const blueTeam = {
+    color: 'cyan',
+    textAlign: 'center'
+  };
+
+  const redTeam = {
+    color: 'indianred',
+    textAlign: 'center'
+  };
+
   useEffect(() => {
     const objIndex = matchData.findIndex((obj => obj.id === match))
     setSummaryStats(matchData[objIndex].summary_stats)
@@ -16,7 +26,7 @@ export default function SummaryStats(props) {
     <>
       <Table striped bordered hover variant="dark" className="sortable" key={match}>
         <thead>
-          <tr>
+          <tr style={{textAlign: 'center'}}>
             <th>player</th>
             <th>team</th>
             <th>powerset</th>
@@ -26,30 +36,44 @@ export default function SummaryStats(props) {
             <th>otp</th>
             <th>heal</th>
             <th>atks</th>
-            {/* <th>Atks on Kill</th>
+            <th>KP</th>
+            <th>Atks on Kill</th>
             <th>Atks b4 PS</th>
             <th>Atk after Kill</th>
-            <th>Atks in2 PS</th> */}
+            <th>Atks in2 PS</th>
+            <th>Heal Before Phase</th>
+            <th>HO b4 Kill</th>
+            <th>AP b4 Kill</th>
+            <th>Heal After Death</th>
+            <th>Heal After Phase</th>
           </tr>
         </thead>
         <tbody>
           {summaryStats.length ? summaryStats.map(data => {
-
+            let teamStyle;
+            if (data.team === "BLU") { teamStyle = blueTeam } 
+            if (data.team === "RED") { teamStyle = redTeam } 
             return (
-              <tr key={data.player}>
+              <tr style={teamStyle} key={data.player}>
                 <td>{data.player}</td>
                 <td>{data.team}</td>
                 <td>{data.powersets}</td>
                 <td>{data.deaths}</td>
                 <td>{data.targets}</td>
                 <td>{(data.survival* 100).toFixed(2) + '%'}</td>
-                <td>{data.otp ? (data.otp* 100).toFixed(2) + '%' : null}</td>
+                <td>{data.otp > 0.01 ? (data.otp* 100).toFixed(2) + '%' : null}</td>
                 <td>{data.ohp ? (data.ohp* 100).toFixed(2) + '%' : null}</td>
                 <td>{data.atks}</td>
-                {/* <td>{data.atksOnDeath}</td>
+                <td>{data.kPart > 0.01 ? (data.kPart* 100).toFixed(2) + '%' : null}</td>
+                <td>{data.atksOnDeath}</td>
                 <td>{data.atksBeforePS}</td>
                 <td>{data.atksAfterDeath}</td>
-                <td>{data.atksIntoPS}</td> */}
+                <td>{data.atksIntoPS}</td>
+                <td>{data.ohp ? data.healsBeforePS : null}</td>
+                <td>{data.ohp ? data.hoBeforeDeath : null}</td>
+                <td>{data.ohp ? data.apBeforeDeath : null}</td>
+                <td>{data.ohp ? data.healsAfterDeath : null}</td>
+                <td>{data.ohp ? data.healsAfterPS : null}</td>
               </tr>
             )
 

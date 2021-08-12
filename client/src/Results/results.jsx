@@ -26,13 +26,14 @@ export default function Results(props) {
       .then(res => {
         console.log(res.data)
         res.data.forEach(x => {
-          matchArr.push({ id: x.id, map: x.summary[0].map })
+          matchArr.push({ id: x.id, map: x.map })
         })
         setMatchData(res.data)
         setMatches(matchArr)
+        setMatch(matchArr[0])
       })
       .catch(err => console.log(err))
-  }, [setMatches, setMatchData, id])
+  }, [setMatches, setMatchData, id, setMatch])
 
   return (
     <Container fluid>
