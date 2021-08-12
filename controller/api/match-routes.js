@@ -16,4 +16,22 @@ router.get("/:id", async (req, res) => {
   }
 })
 
+router.put("/:id", async (req, res) => {
+  try {
+    const matchData = await Match.findOne({
+      where: { id: req.params.id }
+    })
+    const formatMatch = await JSON.parse(JSON.stringify(matchData))
+    await Match.update(
+      { summary_stats: req.body.summaryStats },
+      {
+        where: {id: req.params.id}
+      }
+    )
+    res.status(200).json(formatMatch)
+  } catch {
+    res.status(500).json(err)
+  }
+})
+
 module.exports = router;

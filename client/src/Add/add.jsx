@@ -15,6 +15,11 @@ export default function Add(props) {
   const setSpikeLog = props.setSpikeLog;
 
   const formatData = async (data) => {
+    data.sort((a, b) => {
+      if (a.createdAt < b.createdAt) { return 1 }
+      if (a.createdAt > b.createdAt) { return -1 }
+      return null
+    })
     const objIndex = (data.length - 1)
     const summaryStatsArr = data[objIndex].summary_stats
     const summaryArr = []
@@ -122,7 +127,15 @@ export default function Add(props) {
       }
       return null
     })
+
     console.log(summaryStatsArr)
+
+    axios.put(`/api/match/${data[objIndex].id}`, { summaryStats: summaryStatsArr })
+      .then(res => {
+        console.log("updated data: " + res.data)
+      })
+      .catch(err => console.log(err))
+
     setMatches(matchesArr)
     setSummaryStats(summaryStatsArr)
     setSummary(summaryArr)
@@ -133,11 +146,6 @@ export default function Add(props) {
 
   return (
     <Container>
-      {/* <Form ref={myForm}>
-        <input type="file" ref={csvFile} accept=".csv" />
-        <Button onClick={(e) => submit(e)} type="submit" value="Submit" />
-      </Form> */}
-
       <div className="App">
         <input
           type="file"
