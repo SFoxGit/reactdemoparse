@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Container, Table, Row, Col } from 'react-bootstrap'
+import {  Table, } from 'react-bootstrap'
 
 export default function SummaryStats(props) {
   const summaryStats = props.summaryStats
@@ -23,7 +23,7 @@ export default function SummaryStats(props) {
   }, [match, matchData, setSummaryStats])
 
   return (
-    <Table striped bordered hover variant="dark" className="sortable" key={match}>
+    <Table striped bordered hover variant="dark" className="sortable" key={match} style={{boxShadow: "7px 7px 5px black",  fontWeight: "bolder", fontSize: "18px", textShadow: "3px 3px 0 black",}}>
       <thead>
         <tr style={{ textAlign: 'center' }}>
           <th>player</th>

@@ -5,15 +5,21 @@ export default function SupportMain(props) {
   const summaryStats = props.summaryStats
   const blueTeam = {
     color: 'cyan',
-    textAlign: 'center'
+    textAlign: 'center',
+    textShadow: "3px 3px 0 black",
+    fontWeight: "bolder",
+    fontSize: "18px"
   };
 
   const redTeam = {
     color: 'indianred',
-    textAlign: 'center'
+    textAlign: 'center',
+    textShadow: "3px 3px 0 black",
+    fontWeight: "bolder",
+    fontSize: "18px"
   };
   return (
-    <Table striped bordered hover variant="dark">
+    <Table striped bordered hover variant="dark" style={{ boxShadow: "7px 7px 5px black" }}>
       <thead>
         <tr style={{ textAlign: 'center' }}>
           <th>player</th>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
-import { readString } from 'react-papaparse';
 import { useHistory } from "react-router";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
@@ -8,7 +7,7 @@ import { useParams } from 'react-router-dom';
 export default function Add(props) {
   const { id } = useParams()
   const history = useHistory();
-  const setMatchData = props.setMatchData;
+  // const setMatchData = props.setMatchData;
   const setSummaryStats = props.setSummaryStats;
   const setSummary = props.setSummary;
   const setMatches = props.setMatches;

@@ -6,9 +6,7 @@ import Results from './Results/results';
 import Add from './Add/add'
 import { useState } from 'react';
 import Login from './Login/login';
-import CollectionForm from './Collection/collection.form';
 import Collection from './Collection/collection';
-import SummaryStats from './SummaryStats/summary.stats';
 
 function App() {
   const [matchData, setMatchData] = useState([]);
@@ -23,7 +21,7 @@ function App() {
 
   return (
     <Router>
-      <Header />
+      <Header loggedIn={loggedIn}/>
       <Switch>
         <Route exact path="/">
           <Homepage />
