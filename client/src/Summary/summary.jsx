@@ -30,7 +30,7 @@ export default function Summary(props) {
         {summary.length ? summary.map(data => {
           let redStyle;
           let blueStyle;
-          if (parseInt(data.blue) > parseInt(data.red)) {
+          if (parseFloat(data.blue) > parseFloat(data.red)) {
             blueStyle = {color: 'cyan', border: '2px dotted gold', fontWeight: "bolder", fontSize: "24px", textShadow: "3px 3px 0 black",}
             redStyle = {color: 'indianred', fontWeight: "bolder", fontSize: "24px", textShadow: "3px 3px 0 black",}
           } else if (data.blue < data.red) {
