@@ -3,6 +3,7 @@ import { Table } from 'react-bootstrap'
 
 export default function SupportMain(props) {
   const summaryStats = props.summaryStats
+  const supportExtras = props.supportExtras
   const blueTeam = {
     color: 'cyan',
     textAlign: 'center',
@@ -28,10 +29,12 @@ export default function SupportMain(props) {
           <th>AP b4 Kill</th>
           <th>Heal After Death</th>
           <th>Heal After Phase</th>
+          <th>CMs</th>
         </tr>
       </thead>
       <tbody>
         {summaryStats.length ? summaryStats.map(data => {
+          
           let teamStyle;
           if (data.team === "BLU") { teamStyle = blueTeam }
           if (data.team === "RED") { teamStyle = redTeam }
@@ -44,6 +47,7 @@ export default function SupportMain(props) {
                 <td>{data.ohp ? data.apBeforeDeath : null}</td>
                 <td>{data.ohp ? data.healsAfterDeath : null}</td>
                 <td>{data.ohp ? data.healsAfterPS : null}</td>
+                <td>{data.ohp ? data.cms : null}</td>
               </tr>
             )
           } else return null

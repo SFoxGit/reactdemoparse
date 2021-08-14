@@ -14,13 +14,14 @@ export default function Add(props) {
   const setSpikeLog = props.setSpikeLog;
 
   const formatData = async (data) => {
-    data.sort((a, b) => {
+    await data.sort((a, b) => {
       if (a.createdAt < b.createdAt) { return 1 }
       if (a.createdAt > b.createdAt) { return -1 }
       return null
     })
     const objIndex = (data.length - 1)
     const summaryStatsArr = data[objIndex].summary_stats
+    const supportExtras = data[objIndex].support_extras
     const summaryArr = []
     const matchesArr = []
     const spikeLogArr = data[objIndex].spike_log
@@ -34,6 +35,7 @@ export default function Add(props) {
       y.healsAfterDeath = 0
       y.healsBeforePS = 0
       y.healsAfterPS = 0
+      y.cms = 0
     })
 
     await spikeLogArr.forEach(x => {
@@ -125,6 +127,11 @@ export default function Add(props) {
         return 1
       }
       return null
+    })
+    supportExtras.forEach(y => {
+      const playerIndex = summaryStatsArr.findIndex((obj => obj.player === y.player))
+      const cmIndex = y.actions.findIndex((obj => obj.name === "clear mind"))
+      summaryStatsArr[playerIndex].cms = y.actions[cmIndex].count
     })
 
     console.log(summaryStatsArr)
