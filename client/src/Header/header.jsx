@@ -11,7 +11,7 @@ function Header() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto">
-            <Nav.Link as={Link} to="/results">Results</Nav.Link>
+            {/* <Nav.Link as={Link} to="/results">Results</Nav.Link> */}
             {/* <Nav.Link as={Link} to="/add">Add</Nav.Link> */}
             <Nav.Link as={Link} to="/collections">Collections</Nav.Link>
             <Nav.Link as={Link} to="/login">Login</Nav.Link>
