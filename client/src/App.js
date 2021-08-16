@@ -12,7 +12,7 @@ function App() {
   const [matchData, setMatchData] = useState([]);
   const [summaryStats, setSummaryStats] = useState([]);
   const [summary, setSummary] = useState([]);
-  const [match, setMatch] = useState(1);
+  const [match, setMatch] = useState();
   const [matches, setMatches] = useState([]);
   const [spikeLog, setSpikeLog] = useState([])
   const [loggedIn, setLoggedIn] = useState(false)
@@ -21,7 +21,7 @@ function App() {
 
   return (
     <Router>
-      <Header loggedIn={loggedIn}/>
+      <Header loggedIn={loggedIn} />
       <Switch>
         <Route exact path="/">
           <Homepage />
@@ -51,11 +51,16 @@ function App() {
           />
         </Route>
         <Route exact path="/collections">
-          <Collection
-            collection={collection}
-            setCollection={setCollection}
-            userId={userId}
-          />
+          {loggedIn ?
+            <Collection
+              collection={collection}
+              setCollection={setCollection}
+              userId={userId}
+            />
+            :
+            <Login setLoggedIn={setLoggedIn} setUserId={setUserId} />
+
+          }
         </Route>
         <Route exact path="/match/:id">
           <Results
