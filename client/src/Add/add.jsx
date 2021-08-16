@@ -15,8 +15,8 @@ export default function Add(props) {
 
   const formatData = async (data) => {
     await data.sort((a, b) => {
-      if (a.createdAt < b.createdAt) { return 1 }
-      if (a.createdAt > b.createdAt) { return -1 }
+      if (a.createdAt < b.createdAt) { return -1 }
+      if (a.createdAt > b.createdAt) { return 1 }
       return null
     })
     const objIndex = (data.length - 1)
@@ -25,7 +25,7 @@ export default function Add(props) {
     const summaryArr = []
     const matchesArr = []
     const spikeLogArr = data[objIndex].spike_log
-    summaryStatsArr.forEach(y => {
+    await summaryStatsArr.forEach(y => {
       y.atksOnDeath = 0
       y.atksBeforePS = 0
       y.atksAfterDeath = 0
@@ -128,7 +128,7 @@ export default function Add(props) {
       }
       return null
     })
-    supportExtras.forEach(y => {
+    await supportExtras.forEach(y => {
       const playerIndex = summaryStatsArr.findIndex((obj => obj.player === y.player))
       const cmIndex = y.actions.findIndex((obj => obj.name === "clear mind"))
       summaryStatsArr[playerIndex].cms = y.actions[cmIndex].count
@@ -136,9 +136,9 @@ export default function Add(props) {
 
     console.log(summaryStatsArr)
 
-    axios.put(`/api/match/${data[objIndex].id}`, { summaryStats: summaryStatsArr })
+    await axios.put(`/api/match/${data[objIndex].id}`, { summaryStats: summaryStatsArr })
       .then(res => {
-        console.log("updated data: " + res.data)
+        console.log("updated data: " + res.data[0])
       })
       .catch(err => console.log(err))
 

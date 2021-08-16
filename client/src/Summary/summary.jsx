@@ -14,7 +14,7 @@ export default function Summary(props) {
   }
 
   useEffect(() => {
-    const objIndex = matchData.findIndex((obj => obj.id === match))
+    const objIndex = matchData.findIndex((obj => obj.id === match));
     setSummary(matchData[objIndex].summary)
   }, [setSummary, match, matchData])
   return (

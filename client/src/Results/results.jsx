@@ -30,6 +30,7 @@ export default function Results(props) {
 
   useEffect(() => {
     const matchArr = []
+    setMatch()
     axios.get(`/api/match/${id}`)
       .then(res => {
         console.log(res.data)
@@ -38,7 +39,7 @@ export default function Results(props) {
         })
         setMatchData(res.data)
         setMatches(matchArr)
-        setMatch(matchArr[0])
+        setMatch(matchArr[0].id)
       })
       .catch(err => console.log(err))
   }, [setMatches, setMatchData, id, setMatch])
@@ -46,7 +47,7 @@ export default function Results(props) {
   return (
     <Container fluid>
       {matches.length ? <Row className="justify-content-between m-2">{matches.map(x => <Button key={x.id} variant="dark" onClick={() => viewMatch(x.id)}>Match: {x.map}</Button>)}</Row> : null}
-      {match.length ?
+      {match ?
         <Container fluid>
           <Row>
             <Col xs={8}>

@@ -17,10 +17,10 @@ export default function SummaryStats(props) {
     textAlign: 'center'
   };
 
-  // useEffect(() => {
-  //   const objIndex = matchData.findIndex((obj => obj.id === match))
-  //   setSummaryStats(matchData[objIndex].summary_stats)
-  // }, [match, matchData, setSummaryStats])
+  useEffect(() => {
+    const objIndex = matchData.findIndex((obj => obj.id === match))
+    setSummaryStats(matchData[objIndex].summary_stats)
+  }, [match, matchData, setSummaryStats])
 
   return (
     <Table striped bordered hover variant="dark" className="rounded" key={match} style={{boxShadow: "7px 7px 5px black",  fontWeight: "bolder", fontSize: "18px", textShadow: "3px 3px 0 black",}}>
