@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Button, Col } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
+import MyResponsiveBar from '../Offense/offense.timing'
 import Summary from '../Summary/summary'
 import SummaryStats from '../SummaryStats/summary.stats'
 import SupportMain from '../Support/support.main'
@@ -65,8 +66,15 @@ export default function Results(props) {
                 setSummary={setSummary}
                 matchData={matchData}
               />
-              <SupportMain summaryStats={summaryStats} supportExtras={supportExtras}/>
+              <SupportMain summaryStats={summaryStats} supportExtras={supportExtras} />
             </Col>
+          </Row>
+          <Row>
+            {/* <Col xs={12} style={{"height": "400px"}}>
+              <MyResponsiveBar
+                summaryStats={summaryStats}
+              />
+            </Col> */}
           </Row>
         </Container>
         :
